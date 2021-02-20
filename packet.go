@@ -2,6 +2,10 @@ package main
 
 import "net"
 
+// maxPacketSize is the max size of a udp packet on linux.
+// 2-bytes - ip header size - udp header size
+const maxPacketSize = 65535 - 8 - 20
+
 // PacketWriter write to udp.
 type PacketWriter struct {
 	conn net.PacketConn
@@ -19,6 +23,9 @@ func NewPacketWriter(addr net.Addr) (*PacketWriter, error) {
 
 // Write write data.
 func (w PacketWriter) Write(buf []byte) (int, error) {
+	if len(buf) > maxPacketSize {
+		buf = buf[:maxPacketSize]
+	}
 	return w.conn.WriteTo(buf, w.addr)
 }
 

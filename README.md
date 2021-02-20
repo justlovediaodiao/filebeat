@@ -1,6 +1,6 @@
 # Filebeat
 
-Filebeat harvest file logs by line and send to output.
+Filebeat harvest file logs by line and send to output. Only Linux is supported.
 
 **Features**:
 
