@@ -2,7 +2,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"io"
@@ -73,8 +72,9 @@ func (s *Scanner) Scan() ([]byte, error) {
 			s.end -= s.start
 			s.start = 0
 		} else if s.end == len(s.buf) { // s.start == 0. buf full, resize.
-			if len(s.buf) == maxScanTokenSize { // line too long, overflow buf size. Is there any better way rather than return an error?
-				return s.buf, bufio.ErrBufferFull
+			if len(s.buf) == maxScanTokenSize { // line too long, overflow buf size, split.
+				s.end = 0
+				return s.buf, nil
 			}
 			newSize := len(s.buf) * 2
 			if newSize > maxScanTokenSize {

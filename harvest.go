@@ -154,9 +154,10 @@ func (h *Harvester) harvest(input *FileBeater, output io.WriteCloser) {
 		if err != nil {
 			if err == io.EOF {
 				log.Printf("%s harvest finished", input.Path)
-				break
+			} else {
+				log.Printf("read %s error: %s", input.Path, err)
 			}
-			log.Printf("read error: %s", err)
+			break
 		}
 		if h.filter == nil || h.filter(buf) {
 			_, err = output.Write(buf)
