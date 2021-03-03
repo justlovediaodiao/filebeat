@@ -3,15 +3,15 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 func main() {
 	c := flag.String("c", "config.json", "config file")
 	flag.Parse()
 
-	buf, err := ioutil.ReadFile(*c)
+	buf, err := os.ReadFile(*c)
 	if err != nil {
 		log.Printf("read config error: %s", err)
 		return
