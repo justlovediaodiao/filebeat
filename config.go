@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -43,6 +44,20 @@ func regexFilter(pattern string) (Filter, error) {
 	return re.Match, nil
 }
 
+func inFilter(word string) Filter {
+	bWord := []byte(word)
+	return func(line []byte) bool {
+		return bytes.Contains(line, bWord)
+	}
+}
+
+func notinFilter(word string) Filter {
+	bWord := []byte(word)
+	return func(line []byte) bool {
+		return !bytes.Contains(line, bWord)
+	}
+}
+
 // NewOutputFactory return a factory of output by output config.
 func NewOutputFactory(output dynamic) (OutputFactory, error) {
 	if output.Type == "udp" {
@@ -69,6 +84,18 @@ func NewFilter(filter dynamic) (Filter, error) {
 			return nil, err
 		}
 		return regexFilter(v.Pattern)
+	} else if filter.Type == "in" {
+		var v struct{ Word string }
+		if err := json.Unmarshal(filter.Settings, &v); err != nil {
+			return nil, err
+		}
+		return inFilter(v.Word), nil
+	} else if filter.Type == "notin" {
+		var v struct{ Word string }
+		if err := json.Unmarshal(filter.Settings, &v); err != nil {
+			return nil, err
+		}
+		return notinFilter(v.Word), nil
 	}
 	return nil, fmt.Errorf("unsuuported filter: %s", filter.Type)
 }

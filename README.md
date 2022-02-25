@@ -38,7 +38,25 @@ Config is a json file.
 
 - input: Input file paths, support glob.
 - output: Support only udp address now.
-- filter: Support only regex now. Mismatched lines are discarded.
+- filter: Mismatched lines are discarded.
+    - regex: match by regex.
+    ```json
+    "filter": {
+        "type": "regex",
+        "settings": {
+            "pattern": ""
+        }
+    }
+    ```
+    - in/notin: match by word in/notin line.
+    ```json
+    "filter": {
+        "type": "in",
+        "settings": {
+            "word": ""
+        }
+    }
+    ```
 - harvest_inteval: Harvest interval, default 1 seconds.
 - dump_inteval: Interval of dump offset to file, default 30 seconds.
 - discover: Auto discover log files matched by glob, default true.
