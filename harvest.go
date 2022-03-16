@@ -13,7 +13,7 @@ import (
 // Harvester read from input and write to output.
 type Harvester struct {
 	registry  Registry
-	inputs    StringSet
+	inputs    Set[string]
 	notify    chan FileOffset
 	outputFac OutputFactory
 	filter    Filter
@@ -35,7 +35,7 @@ func NewHarvester(config *Config) (*Harvester, error) {
 	}
 	return &Harvester{
 		registry:  NewRegistry(config.RegistryPath, config.RegistryTTL),
-		inputs:    make(StringSet),
+		inputs:    make(Set[string]),
 		notify:    make(chan FileOffset, 32),
 		outputFac: outputFac,
 		filter:    filter,
@@ -128,8 +128,8 @@ func (h *Harvester) serve() {
 	}
 }
 
-func (h *Harvester) scan() StringSet {
-	result := make(StringSet)
+func (h *Harvester) scan() Set[string] {
+	result := make(Set[string])
 	for _, glob := range h.config.Input {
 		matches, err := filepath.Glob(glob)
 		if err != nil {
