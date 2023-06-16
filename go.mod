@@ -1,3 +1,3 @@
-module github.com/viabtc/filebeat
+module github.com/justlovediaodiao/filebeat
 
-go 1.18
+go 1.20
